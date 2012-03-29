@@ -20,9 +20,11 @@ public class TrafficServerManager {
     	
     	TrafficServer server1 = new TrafficServer("58.215.188.215", 9000, 1, 0, 1000);
     	TrafficServer server2 = new TrafficServer("58.215.184.219", 9000, 2, 400, 2000);
+    	TrafficServer server3 = new TrafficServer("106.187.89.232", 9000, 1, 0, 2000);
 
     	serverList.put(server1.getKey(), server1);
     	serverList.put(server2.getKey(), server2);
+    	serverList.put(server3.getKey(), server3);
 	} 	    
     
     public static TrafficServerManager getInstance() { 
