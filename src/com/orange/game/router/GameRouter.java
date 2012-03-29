@@ -1,9 +1,13 @@
 package com.orange.game.router;
 
+import java.util.Timer;
+import java.util.TimerTask;
+
 import com.orange.common.api.CommonApiServer;
 import com.orange.common.api.service.ServiceHandler;
 import com.orange.common.mongodb.MongoDBClient;
 import com.orange.game.constants.DBConstants;
+import com.orange.game.model.manager.TrafficServerManager;
 import com.orange.game.router.service.GameServiceFactory;
 
 public class GameRouter extends CommonApiServer {
@@ -49,6 +53,18 @@ public class GameRouter extends CommonApiServer {
 	}
 	
     public static void main(String[] args) throws Exception{
+    	
+    	TrafficServerManager.getInstance().loadTrafficServerFromFiles();
+    	
+    	// schedule a timer to read file 
+    	Timer timer = new Timer();
+    	timer.schedule(new TimerTask(){
+			@Override
+			public void run() {
+				TrafficServerManager.getInstance().loadTrafficServerFromFiles();
+			}    		
+    	}, 1000*5, 1000*5);
+    	
     	GameRouter server = new GameRouter();
 		server.startServer();
     }

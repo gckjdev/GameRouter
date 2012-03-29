@@ -1,0 +1,8 @@
+{
+"servers":
+	[
+		{"server_address":"58.215.188.215", "server_port":9000, "language":1, "capacity":3000},
+		{"server_address":"58.215.184.219", "server_port":9000, "language":2, "capacity":3000},
+		{"server_address":"106.187.89.232", "server_port":9000, "language":1, "capacity":3000}
+	]
+}

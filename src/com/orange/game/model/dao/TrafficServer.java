@@ -1,6 +1,6 @@
 package com.orange.game.model.dao;
 
-public class TrafficServer {
+public class TrafficServer implements Comparable {
 
 	public static final int LANG_CHINESE = 1;
 	public static final int LANG_ENGLISH = 2;
@@ -13,6 +13,7 @@ public class TrafficServer {
 	int language;
 	int usage;
 	int capacity;
+	long lastModified;
 	
 	public TrafficServer(String serverAddress, int port, int language, int usage, int capacity){
 		super();
@@ -56,7 +57,11 @@ public class TrafficServer {
 	}
 	
 	public String getKey(){
-		return serverAddress + ":" + serverPort;
+		return createKey(serverAddress, serverPort);
+	}
+	
+	public static String createKey(String addr, int port) {
+		return addr + ":" + port;
 	}
 
 	public String getServerAddress() {
@@ -106,6 +111,28 @@ public class TrafficServer {
 	public void setCapacity(int capacity) {
 		this.capacity = capacity;
 	}
+
+	@Override
+	public int compareTo(Object arg0) {
+		TrafficServer obj = (TrafficServer)arg0;
+		return this.usage - obj.usage;
+	}
 	
+	public void setLastModified(long modified){
+		this.lastModified = modified;
+	}
+
+	public long getLastModified() {
+		return this.lastModified;
+	}
+
+	@Override
+	public String toString() {
+		return "TrafficServer [capacity=" + capacity + ", language=" + language
+				+ ", lastModified=" + lastModified + ", serverAddress="
+				+ serverAddress + ", serverPort=" + serverPort + ", usage="
+				+ usage + ", userCount=" + userCount + "]";
+	}
+
 	
 }
