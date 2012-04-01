@@ -341,6 +341,7 @@ public class ServiceConstant  {
 	public static final String PARA_SERVER_CAPACITY = "sc";
 	
 	public static final String METHOD_GET_TRAFFIC_SERVER_LIST = "gt";
+	public static final String METHOD_UPDATE_TRAFFIC_SERVER_STATUS = "us";
 
 
     

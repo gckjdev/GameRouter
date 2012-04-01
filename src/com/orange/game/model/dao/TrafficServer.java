@@ -7,21 +7,23 @@ public class TrafficServer implements Comparable {
 	public static final int LANG_UNKNOWN = 0;
 	
 	
-	String serverAddress;
-	int serverPort;
-	int userCount;
-	int language;
-	int usage;
-	int capacity;
-	long lastModified;
+	final String serverAddress;
+	final int serverPort;
+//	final int userCount;
+	final int language;
+	final int usage;
+	final int capacity;
+	final long lastModified;
 	
-	public TrafficServer(String serverAddress, int port, int language, int usage, int capacity){
+	public TrafficServer(String serverAddress, int port, int language, int usage, int capacity,
+			long lastModified){
 		super();
 		this.serverAddress = serverAddress;
 		this.serverPort = port;
 		this.language = language;
 		this.usage = usage;
 		this.capacity = capacity;
+		this.lastModified = lastModified;
 	}
 
 	@Override
@@ -68,49 +70,49 @@ public class TrafficServer implements Comparable {
 		return serverAddress;
 	}
 
-	public void setServerAddress(String serverAddress) {
-		this.serverAddress = serverAddress;
-	}
+//	public void setServerAddress(String serverAddress) {
+//		this.serverAddress = serverAddress;
+//	}
 
 	public int getServerPort() {
 		return serverPort;
 	}
 
-	public void setServerPort(int serverPort) {
-		this.serverPort = serverPort;
-	}
+//	public void setServerPort(int serverPort) {
+//		this.serverPort = serverPort;
+//	}
 
-	public int getUserCount() {
-		return userCount;
-	}
+//	public int getUserCount() {
+//		return userCount;
+//	}
 
-	public void setUserCount(int userCount) {
-		this.userCount = userCount;
-	}
+//	public void setUserCount(int userCount) {
+//		this.userCount = userCount;
+//	}
 
 	public int getLanguage() {
 		return language;
 	}
 
-	public void setLanguage(int language) {
-		this.language = language;
-	}
+//	public void setLanguage(int language) {
+//		this.language = language;
+//	}
 
 	public int getUsage() {
 		return usage;
 	}
 
-	public void setUsage(int usage) {
-		this.usage = usage;
-	}
+//	public void setUsage(int usage) {
+//		this.usage = usage;
+//	}
 
 	public int getCapacity() {
 		return capacity;
 	}
 
-	public void setCapacity(int capacity) {
-		this.capacity = capacity;
-	}
+//	public void setCapacity(int capacity) {
+//		this.capacity = capacity;
+//	}
 
 	@Override
 	public int compareTo(Object arg0) {
@@ -118,9 +120,9 @@ public class TrafficServer implements Comparable {
 		return this.usage - obj.usage;
 	}
 	
-	public void setLastModified(long modified){
-		this.lastModified = modified;
-	}
+//	public void setLastModified(long modified){
+//		this.lastModified = modified;
+//	}
 
 	public long getLastModified() {
 		return this.lastModified;
@@ -131,7 +133,7 @@ public class TrafficServer implements Comparable {
 		return "TrafficServer [capacity=" + capacity + ", language=" + language
 				+ ", lastModified=" + lastModified + ", serverAddress="
 				+ serverAddress + ", serverPort=" + serverPort + ", usage="
-				+ usage + ", userCount=" + userCount + "]";
+				+ usage + "]";
 	}
 
 	

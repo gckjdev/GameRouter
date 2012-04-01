@@ -15,6 +15,9 @@ public class GameServiceFactory extends CommonServiceFactory {
 		if (method.equalsIgnoreCase(ServiceConstant.METHOD_GET_TRAFFIC_SERVER_LIST)){
 			return new GetTrafficServerService();
 		}
+		else if (method.equalsIgnoreCase(ServiceConstant.METHOD_UPDATE_TRAFFIC_SERVER_STATUS)){
+			return new UpdateTrafficServerStatusService();
+		}
 		else{
 			return null;
 		}

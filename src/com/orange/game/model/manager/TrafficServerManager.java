@@ -10,6 +10,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
 
 import net.sf.json.JSONArray;
@@ -21,7 +22,7 @@ import com.orange.game.model.dao.TrafficServer;
 public class TrafficServerManager extends CommonManager {
 
 	
-	Map<String, TrafficServer> serverList = new ConcurrentHashMap<String, TrafficServer>();
+	ConcurrentHashMap<String, TrafficServer> serverList = new ConcurrentHashMap<String, TrafficServer>();
 	Object dataLock = new Object();
 	
     private static TrafficServerManager manager = new TrafficServerManager();    
@@ -46,16 +47,16 @@ public class TrafficServerManager extends CommonManager {
     @SuppressWarnings("unchecked")
 	public List<TrafficServer> findAllServers(){
     	List<TrafficServer> retList = new ArrayList<TrafficServer>();
-    	synchronized(dataLock){
-    		retList.addAll(serverList.values());
-    	}
+    	retList.addAll(serverList.values());
     	Collections.sort(retList);
     	return retList;
     }
     
-    public void createOrUpdateTrafficServer(String addr, int port, int language, int usage, int capacity){
-    	TrafficServer server = new TrafficServer(addr, port, language, usage, capacity);
+    public void createOrUpdateTrafficServer(String addr, int port, int usage, int language, int capacity){
+    	TrafficServer server = new TrafficServer(addr, port, language, usage, capacity, System.currentTimeMillis());
     	serverList.put(server.getKey(), server);
+    	log.info("<createOrUpdateTrafficServer> "+server.toString());
+    	log.info("server list = "+serverList.entrySet().toString());
     }
     
     public String getConfigFile(){
@@ -132,44 +133,47 @@ public class TrafficServerManager extends CommonManager {
 			return false;
 		}
 		
-		synchronized (dataLock){
-			int size = serverArray.size();
-			long lastModified = System.currentTimeMillis();
-			for (int i=0; i<size; i++){
-				JSONObject server = serverArray.getJSONObject(i);
-				
-				String key = TrafficServer.createKey(server.getString("server_address"), server.getInt("server_port"));			
-				TrafficServer trafficServer = serverList.get(key);
-				if (trafficServer == null){
-					trafficServer = new TrafficServer(server.getString("server_address"), 
-							server.getInt("server_port"), server.getInt("language"), 
-							0, server.getInt("capacity"));
-					serverList.put(key, trafficServer);
-					trafficServer.setLastModified(lastModified);
-					
-					log.info("Add Server " + trafficServer.toString() + " in list");
-				}
-				else{
-					trafficServer.setLastModified(lastModified);	
-					trafficServer.setCapacity(server.getInt("capacity"));
-					trafficServer.setLanguage(server.getInt("language"));
-					log.info("Update Server " + trafficServer.toString() + " in list");
-				}
-			}
+		// add or update servers
+		int size = serverArray.size();
+		long lastModified = System.currentTimeMillis();
+		for (int i=0; i<size; i++){
+			JSONObject server = serverArray.getJSONObject(i);
 			
-			// if there are some servers which are not modified, remove them
-			List<String> removeList = new ArrayList<String>();
-			for (TrafficServer server : serverList.values()){
-				if (server.getLastModified() != lastModified){
-					removeList.add(server.getKey());
-				}				
+			String key = TrafficServer.createKey(server.getString("server_address"), server.getInt("server_port"));			
+			TrafficServer trafficServer = serverList.get(key);
+			if (trafficServer == null){
+				trafficServer = new TrafficServer(server.getString("server_address"), 
+						server.getInt("server_port"), server.getInt("language"), 
+						0, server.getInt("capacity"), lastModified);
+				serverList.put(key, trafficServer);					
+				log.info("Add Server " + trafficServer.toString() + " in list");
 			}
-	
-			for (String key : removeList){
-				
-				log.info("Remove Server " + serverList.get(key).toString() + " from list");
-				serverList.remove(key);
+			else{
+				TrafficServer updateServer = new TrafficServer(trafficServer.getServerAddress(),
+						trafficServer.getServerPort(),
+						server.getInt("language"),
+						server.getInt("capacity"),
+						trafficServer.getUsage(),
+						lastModified);
+
+				serverList.put(updateServer.getKey(), updateServer);										
+				log.info("Update Server " + updateServer.toString() + " in list");
 			}
+		}
+		
+		// remove servers
+		// if there are some servers which are not modified, remove them
+		List<String> removeList = new ArrayList<String>();
+		for (Entry<String,TrafficServer> entry : serverList.entrySet()){
+			TrafficServer server = entry.getValue();
+			if (server.getLastModified() != lastModified){
+				removeList.add(server.getKey());
+			}				
+		}
+
+		for (String key : removeList){				
+			log.info("Remove Server " + serverList.get(key).toString() + " from list");
+			serverList.remove(key);
 		}
 		
 		return true;
